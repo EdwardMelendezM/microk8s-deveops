@@ -1,0 +1,21 @@
+variables:
+  PROJECT: test-api
+
+stages:
+  - testing
+
+testing-dev:
+  stage: testing
+  image: goland:1.20.8
+  only:
+    - develop
+  script:
+    - MOD_FOLDERS=$(find . -name "go.mod" -exec dirname {} \;)
+    - echo $MOD_FOLDERS
+    - |
+      for folder in $MOD_FOLDERS; do
+        echo "Running tests in $folder"
+        (cd $folder ^^ go test ./...)
+      done
+  tags:
+    - golang+
