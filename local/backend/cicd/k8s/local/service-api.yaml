@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: users-core-test-api-service
+  namespace: test-local
+spec:
+  selector:
+    app: users-core-test-api
+  ports:
+    - protocol: TCP
+      port: 9010
+      targetPort: 80
+  type: NodePort
