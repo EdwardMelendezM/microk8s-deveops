@@ -1,0 +1,47 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_VERSION: "20.9"
+  PACKAGE_MANAGER: "npm"
+  ARTIFACTS_DIR: "dist"
+
+before_script:
+  - apt-get update -qy
+  - apt-get install -y curl
+  - curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
+  - apt-get install -y nodejs
+  - node --version
+  - npm --version
+  - npm install -g @angular/cli
+
+cache:
+  paths:
+    - node_modules/
+    - .npm/
+
+build:
+  stage: build
+  script:
+    - $PACKAGE_MANAGER install
+    - ng build --prod
+
+test:
+  stage: test
+  script:
+    - $PACKAGE_MANAGER install
+    - ng test
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  script:
+    - echo "Deploy to production..."
+  artifacts:
+    paths:
+      - $ARTIFACTS_DIR/
+  tags:
+    - angular

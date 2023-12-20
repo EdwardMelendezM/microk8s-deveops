@@ -1,0 +1,48 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_VERSION: "20.9"
+  PACKAGE_MANAGER: "npm"
+  ARTIFACTS_DIR: "out"
+
+before_script:
+  - apt-get update -qy
+  - apt-get install -y curl
+  - curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
+  - apt-get install -y nodejs
+  - node --version
+  - npm --version
+  - npm install -g next
+
+cache:
+  paths:
+    - node_modules/
+    - .npm/
+
+build:
+  stage: build
+  script:
+    - $PACKAGE_MANAGER install
+    - next build
+
+test:
+  stage: test
+  script:
+    - $PACKAGE_MANAGER install
+    - next test
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  script:
+    - echo "Deploy to production..."
+    - scp -r $ARTIFACTS_DIR/* user@tudominio.com:/ruta/del/servidor/web
+  artifacts:
+    paths:
+      - $ARTIFACTS_DIR/
+  tags:
+    - nextjs
