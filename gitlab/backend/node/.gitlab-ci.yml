@@ -1,0 +1,31 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  # Define las variables de entorno necesarias para tu proyecto
+  MONGODB_URI: "tu_uri_de_mongo_db"
+  NODE_ENV: "production"
+
+before_script:
+  # Antes de ejecutar cualquier tarea, instala las dependencias
+  - npm install
+
+build:
+  stage: build
+  script:
+    # Ejecuta cualquier comando necesario para construir tu aplicación
+    - npm run build
+
+test:
+  stage: test
+  script:
+    # Ejecuta pruebas unitarias, linting, etc.
+    - npm test
+
+deploy:
+  stage: deploy
+  script:
+    # Despliega tu aplicación, puede ser a un servidor, un PaaS, etc.
+    - npm run deploy
